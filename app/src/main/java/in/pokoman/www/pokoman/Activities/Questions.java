@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -93,16 +94,24 @@ public class Questions extends AppCompatActivity {
                                 }
                             }
                         }
-                    }else {
-                            v1.pause();
+                    } else {
+                        v1.pause();
+                        if (fraginplace)
                             fragman.popBackStack();
-                            fraginplace = false;
-                            startActivity(new Intent(Questions.this, ResultActivity.class));
-                        }
+                        fraginplace = false;
+                        startActivity(new Intent(Questions.this, ResultActivity.class));
+                    }
+                    if (status.getShowques() != null)
+                    {
                         if (!status.getShowques().equals("1")) {
-                             onBackPressed();
+                            onBackPressed();
                         }
                     }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),"Please try again",Toast.LENGTH_SHORT).show();
+                    }
+                }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {

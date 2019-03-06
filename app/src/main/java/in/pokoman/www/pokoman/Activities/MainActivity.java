@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         mUserImage = (CircularImageView) findViewById(R.id.user_image);
         playbtn = (Button) findViewById(R.id.play_btn);
         playbtn.setText("Not Live!!");
-        playbtn.setEnabled(false);
+        //playbtn.setEnabled(false);
        // gameplayed = (TextView) findViewById(R.id.game_played_text);
         quiz_name = (TextView) findViewById(R.id.quiz_name);
         quiz_price = (TextView) findViewById(R.id.quiz_price);

@@ -256,14 +256,14 @@ private void attachQuestionListener() {
             public void onTick(long millisUntilFinished) {
                 int seconds = (int) (millisUntilFinished / 1000);
                 seconds = seconds % 60;
-                tv.setText(String.format("%02d", seconds) + " to choose the answer");
+                tv.setText(String.format("%02d", seconds) + " seconds to choose the answer");
             }
 
             public void onFinish() {
                 //To prevent the timer from causing a npe from lack of a context
                // int orientation = getActivity().getResources().getConfiguration().orientation;
                // if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    tv.setText("Completed");
+                    tv.setText("Time's up!");
                     timeup = true;
                     markcorrectanswer(op1);
                 }
