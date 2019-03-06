@@ -233,18 +233,18 @@ public class ResultActivity extends AppCompatActivity {
    }
 
     private void setresult(Long res, String str) {
-        result_text.setText("Total Points:"+res);
+        result_text.setText("Total Points: "+res);
         if(res >= 1 && res <6){
-            voucher.setText("You Won Rs. 100 voucher!");
+            voucher.setText("You have won a Rs100 voucher!");
         }
         if(res >= 6 && res < 11){
-            voucher.setText("You won Rs. 250 voucher");
+            voucher.setText("You have won a Rs250 voucher!");
         }
         if(res >= 11 && res < 15){
-            voucher.setText("You won Rs. 500 voucher");
+            voucher.setText("You have won a Rs500 voucher!");
         }
         if(res == 15){
-            voucher.setText("You won Rs. 1000 voucher");
+            voucher.setText("You have won a Rs1000 voucher!");
         }
         }
 

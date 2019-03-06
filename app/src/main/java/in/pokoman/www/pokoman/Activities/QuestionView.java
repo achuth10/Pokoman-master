@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +33,7 @@ public class QuestionView extends Fragment {
     FragmentManager fragman;
     CountDownTimer waitTimer;
     boolean fraginplace,doneloading;
-    int counter;
+    int counter,initial;
     boolean timeup=false;
     ArrayList<Question> questions;
     TextView questiionView, op1, op2, op3, op4,time;
@@ -54,7 +55,7 @@ public class QuestionView extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_question_view, container, false);
 
-        counter =  0;
+        counter = initial= 0;
         questions = new ArrayList<>();
         clicked =fraginplace=doneloading=false;
         fragman= getFragmentManager();
@@ -229,13 +230,15 @@ private void attachQuestionListener() {
                     System.out.println("Current question :" + currentQuesno);
                     if(liveStatus.equals("1")) {
                         if (showQuestion.equals("1")) {
-                            if(waitTimer != null) {
+                            if (waitTimer != null) {
                                 waitTimer.cancel();
                                 waitTimer = null;
                             }
-                            timeup=false;
-                            displayNextQuestion(Integer.parseInt(currentQuesno));
-                            reverseTimer(5, time);
+                            timeup = false;
+
+                                displayNextQuestion(Integer.parseInt(currentQuesno));
+                                reverseTimer(5, time);
+
                         }
                     }
                 }
@@ -282,6 +285,7 @@ private void attachQuestionListener() {
             waitTimer.cancel();
             waitTimer = null;
         }
+        initial=0;
 
     }
     @Override
