@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class QuestionView extends Fragment {
     int counter,initial;
     boolean timeup=false;
     ArrayList<Question> questions;
-    TextView questiionView, op1, op2, op3, op4,time;
+    TextView questiionView, op1, op2, op3, op4,time,qno;
     boolean clicked;
     private String liveStatus, showQuestion;
     private String currentQuesno = "1";
@@ -55,7 +56,7 @@ public class QuestionView extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_question_view, container, false);
 
-        counter = initial= 0;
+        counter =  0;
         questions = new ArrayList<>();
         clicked =fraginplace=doneloading=false;
         fragman= getFragmentManager();
@@ -63,11 +64,12 @@ public class QuestionView extends Fragment {
         questiionView = (TextView) v.findViewById(R.id.questionView);
 
         //Initialise the views
-        time=(TextView)v.findViewById(R.id.timeview);
+        time= (TextView) v.findViewById(R.id.timeview);
         op1 = (TextView) v.findViewById(R.id.option1);
         op2 = (TextView) v.findViewById(R.id.option2);
         op3 = (TextView) v.findViewById(R.id.option3);
         op4 = (TextView) v.findViewById(R.id.option4);
+        qno=  (TextView) v.findViewById(R.id.qno);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -189,6 +191,8 @@ public class QuestionView extends Fragment {
             op2.setText(questions.get(count).getOp2());
             op3.setText(questions.get(count).getOp3());
             op4.setText(questions.get(count).getOp4());
+            qno.setVisibility(View.VISIBLE);
+            qno.setText((count+1)+"/5");
         }
         else
             System.out.println("not done loading");
@@ -199,6 +203,7 @@ private void attachQuestionListener() {
         mQuestionListner = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                initial++;
                 for (DataSnapshot questionsnap : dataSnapshot.getChildren()) {
                     Question q = questionsnap.getValue(Question.class);
                     questions.add(q);
@@ -229,16 +234,37 @@ private void attachQuestionListener() {
                     System.out.println("show question :" + showQuestion);
                     System.out.println("Current question :" + currentQuesno);
                     if(liveStatus.equals("1")) {
+
                         if (showQuestion.equals("1")) {
+                            initial++;
                             if (waitTimer != null) {
                                 waitTimer.cancel();
                                 waitTimer = null;
                             }
                             timeup = false;
-
+                            if (initial > 1) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                time.setTextSize(14);
+                                time.setGravity(Gravity.CENTER_HORIZONTAL);
                                 displayNextQuestion(Integer.parseInt(currentQuesno));
                                 reverseTimer(5, time);
 
+                            }
+                            else
+                            {
+                                progressBar.setVisibility(View.GONE);
+                                op1.setBackgroundResource(R.color.colorWhite);
+                                op2.setBackgroundResource(R.color.colorWhite);
+                                op3.setBackgroundResource(R.color.colorWhite);
+                                op4.setBackgroundResource(R.color.colorWhite);
+                                time.setTextSize(30);
+                                time.setGravity(Gravity.CENTER);
+                                time.setText("Quiz is loading \n please be patient ");
+                            }
+                        }
+                        else
+                        {
+                            initial++;
                         }
                     }
                 }
@@ -285,7 +311,6 @@ private void attachQuestionListener() {
             waitTimer.cancel();
             waitTimer = null;
         }
-        initial=0;
 
     }
     @Override

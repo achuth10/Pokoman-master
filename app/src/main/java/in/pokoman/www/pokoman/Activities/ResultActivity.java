@@ -56,8 +56,15 @@ public class ResultActivity extends AppCompatActivity {
         //Set Toolbar
         //Setting Toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolTitle = (TextView) findViewById(R.id.toolbar_title);
-
+        mToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResultActivity.this,MainActivity.class));
+            }
+        });
         name = findViewById(R.id.name);
         voucher = findViewById(R.id.vouchers);
         user_pic = findViewById(R.id.user_image);
@@ -170,6 +177,10 @@ public class ResultActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+    }
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
     private void setResultMessage(int res) {
         String message="";

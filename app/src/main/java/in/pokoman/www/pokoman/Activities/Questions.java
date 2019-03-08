@@ -53,11 +53,14 @@ public class Questions extends AppCompatActivity {
 
     }
 
+
     private void setfragement(Fragment frag) {
-        fraginplace=true;
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentTransaction.replace(R.id.mainframe, frag).addToBackStack(null).commit();
+        fraginplace = true;
+        if (!isFinishing()) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            fragmentTransaction.replace(R.id.mainframe, frag).addToBackStack(null).commitAllowingStateLoss();
+        }
     }
     public void onBackPressed() {
 

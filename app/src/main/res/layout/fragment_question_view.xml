@@ -2,17 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="450dp"
+    android:layout_height="480dp"
     android:layout_gravity="center"
     android:background="@drawable/holdernoborder"
     tools:context=".Activities.QuestionView">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/qno"
+        android:textColor="@color/black"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/timeview"
+        />
 
     <TextView
         android:id="@+id/timeview"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="14sp" />
@@ -39,8 +50,8 @@
 
     <LinearLayout
         android:layout_width="270dp"
-        android:layout_height="360dp"
-        android:layout_below="@id/timeview"
+        android:layout_height="380dp"
+        android:layout_below="@id/qno"
         android:layout_centerHorizontal="true"
         android:background="@color/white"
         android:clickable="true"
@@ -94,7 +105,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/black"
-            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:background="@drawable/questionsholder" />
     </LinearLayout>
