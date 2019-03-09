@@ -117,24 +117,25 @@ public class QuestionView extends Fragment {
 
         //Checks if the answer is correct and colours the textview accordingly
         //To stop the timer
-        if(waitTimer != null) {
-            waitTimer.cancel();
-            waitTimer = null;
-        }
         TextView correctans = null;
         if(doneloading) {
                     System.out.println("Doneloading");
-                if (op1.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)).getAns())) {
+                    System.out.println(questions);
+                if (op1.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)-1).getAns())) {
+                    System.out.println("1 is correct");
                     op1.setBackgroundResource(R.drawable.correctquestion);
                     correctans = op1;
-                } else if (op2.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)).getAns())) {
+                } else if (op2.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)-1).getAns())) {
                     op2.setBackgroundResource(R.drawable.correctquestion);
+                    System.out.println("2 is correct");
                     correctans = op2;
-                } else if (op3.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)).getAns())) {
+                } else if (op3.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)-1).getAns())) {
                     op3.setBackgroundResource(R.drawable.correctquestion);
+                    System.out.println("3 is correct");
                     correctans = op3;
-                } else if (op4.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)).getAns())) {
+                } else if (op4.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)-1).getAns())) {
                     op4.setBackgroundResource(R.drawable.correctquestion);
+                    System.out.println("4 is correct");
                     correctans = op4;
                 }
 
@@ -177,12 +178,14 @@ public class QuestionView extends Fragment {
                 clicked = true;
             }
         }
+        selected=false;
     }
 
 
 
 
     private void displayNextQuestion(int count) {
+        selected=false;
         op1.setBackgroundResource(R.drawable.questionsholder);
         op2.setBackgroundResource(R.drawable.questionsholder);
         op3.setBackgroundResource(R.drawable.questionsholder);
@@ -190,7 +193,7 @@ public class QuestionView extends Fragment {
         clicked=false;
         if(doneloading) {
             if(count>=5)
-                count=0;
+                count=1;
              progressBar.setVisibility(View.GONE);
             System.out.println("Questions here is " + questions);
             questiionView.setText(questions.get(count-1).getQues());
@@ -244,6 +247,7 @@ private void attachQuestionListener() {
                     if(liveStatus.equals("1")) {
 
                         if (showQuestion.equals("1")) {
+                            //selected=false;
                             initial++;
                             if (waitTimer != null) {
                                 waitTimer.cancel();
@@ -313,11 +317,9 @@ private void attachQuestionListener() {
                // if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     tv.setText("Time's up!");
                     timeup = true;
-                    if(!selected)
-                    {
+                    if(!clicked)
                         mUserLostReference.setValue(1);
-                    }
-                    //markcorrectanswer(op1);
+                    //.markcorrectanswer(op1);
                 }
 
         }.start();

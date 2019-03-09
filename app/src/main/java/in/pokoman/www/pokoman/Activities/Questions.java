@@ -116,7 +116,7 @@ public class Questions extends AppCompatActivity {
                     } else {
                         v1.pause();
                         if (fraginplace)
-                            fragman.popBackStack();
+                            //fragman.popBackStack();
                         fraginplace = false;
                         mUserLostReference.setValue(0);
                         startActivity(new Intent(Questions.this, ResultActivity.class));
