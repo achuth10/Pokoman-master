@@ -1,6 +1,7 @@
 package in.pokoman.www.pokoman.Activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -35,7 +36,7 @@ public class QuestionView extends Fragment {
     CountDownTimer waitTimer;
     boolean fraginplace,doneloading;
     int counter,initial;
-    boolean timeup=false;
+    boolean timeup=false,selected=false,selectedcorrect=false;
     ArrayList<Question> questions;
     TextView questiionView, op1, op2, op3, op4,time,qno;
     boolean clicked;
@@ -48,6 +49,7 @@ public class QuestionView extends Fragment {
     private DatabaseReference mQuestionsReference;
     private DatabaseReference mVoucherReference;
     private DatabaseReference mUserReference;
+    private DatabaseReference mUserLostReference;
     public int pts=0, voucher = 0;
 
 
@@ -58,7 +60,7 @@ public class QuestionView extends Fragment {
 
         counter =  0;
         questions = new ArrayList<>();
-        clicked =fraginplace=doneloading=false;
+        clicked =fraginplace=doneloading=selected=selectedcorrect=false;
         fragman= getFragmentManager();
         progressBar=(ProgressBar)v.findViewById(R.id.questionloadprog);
         questiionView = (TextView) v.findViewById(R.id.questionView);
@@ -78,6 +80,7 @@ public class QuestionView extends Fragment {
         mQuizStatusReference = FirebaseDatabase.getInstance().getReference().child("QuizStatus");
         mUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUser.getUid());
         mUserPtsReference=mUserReference.child("totalpt");
+        mUserLostReference=mUserReference.child("Lost");
         mVoucherReference = mUserReference.child("voucher");
         attachQuestionListener();
         attachQuizStatusListener();
@@ -110,6 +113,7 @@ public class QuestionView extends Fragment {
     }
 
     private void markcorrectanswer(TextView option) {
+        selected=true;
 
         //Checks if the answer is correct and colours the textview accordingly
         //To stop the timer
@@ -119,7 +123,7 @@ public class QuestionView extends Fragment {
         }
         TextView correctans = null;
         if(doneloading) {
-
+                    System.out.println("Doneloading");
                 if (op1.getText().toString().equals(questions.get(Integer.parseInt(currentQuesno)).getAns())) {
                     op1.setBackgroundResource(R.drawable.correctquestion);
                     correctans = op1;
@@ -137,10 +141,13 @@ public class QuestionView extends Fragment {
 
             if (!timeup) {
                 if (correctans != null) {
+                    System.out.println("!timeup");
                     if (!clicked) {
                         if (correctans != option) {
                             option.setBackgroundResource(R.drawable.wrongquestion);
+                            mUserLostReference.setValue(1);
                         } else {
+                            selectedcorrect=true;
                             pts++;
                             option.setBackgroundResource(R.drawable.correctquestion);
                             mUserPtsReference.setValue(pts);
@@ -186,13 +193,13 @@ public class QuestionView extends Fragment {
                 count=0;
              progressBar.setVisibility(View.GONE);
             System.out.println("Questions here is " + questions);
-            questiionView.setText(questions.get(count).getQues());
-            op1.setText(questions.get(count).getOp1());
-            op2.setText(questions.get(count).getOp2());
-            op3.setText(questions.get(count).getOp3());
-            op4.setText(questions.get(count).getOp4());
+            questiionView.setText(questions.get(count-1).getQues());
+            op1.setText(questions.get(count-1).getOp1());
+            op2.setText(questions.get(count-1).getOp2());
+            op3.setText(questions.get(count-1).getOp3());
+            op4.setText(questions.get(count-1).getOp4());
             qno.setVisibility(View.VISIBLE);
-            qno.setText((count+1)+"/5");
+            qno.setText((count)+"/5");
         }
         else
             System.out.println("not done loading");
@@ -221,6 +228,7 @@ private void attachQuestionListener() {
     }
 }
 
+
     private void attachQuizStatusListener() {
         if (mQuizStatusListner == null) {
             mQuizStatusListner = new ValueEventListener() {
@@ -247,7 +255,7 @@ private void attachQuestionListener() {
                                 time.setTextSize(14);
                                 time.setGravity(Gravity.CENTER_HORIZONTAL);
                                 displayNextQuestion(Integer.parseInt(currentQuesno));
-                                reverseTimer(5, time);
+                                reverseTimer(20, time);
 
                             }
                             else
@@ -265,6 +273,17 @@ private void attachQuestionListener() {
                         else
                         {
                             initial++;
+                            if(waitTimer != null) {
+                                waitTimer.cancel();
+                                waitTimer = null;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(waitTimer != null) {
+                            waitTimer.cancel();
+                            waitTimer = null;
                         }
                     }
                 }
@@ -294,7 +313,11 @@ private void attachQuestionListener() {
                // if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                     tv.setText("Time's up!");
                     timeup = true;
-                    markcorrectanswer(op1);
+                    if(!selected)
+                    {
+                        mUserLostReference.setValue(1);
+                    }
+                    //markcorrectanswer(op1);
                 }
 
         }.start();
@@ -307,6 +330,7 @@ private void attachQuestionListener() {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mUserLostReference.setValue(0);
         if(waitTimer != null) {
             waitTimer.cancel();
             waitTimer = null;
@@ -316,6 +340,7 @@ private void attachQuestionListener() {
     @Override
      public void onStop() {
         super.onStop();
+        mUserLostReference.setValue(0);
         detachAllListener();
     }
 

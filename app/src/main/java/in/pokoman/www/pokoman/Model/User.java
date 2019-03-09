@@ -5,6 +5,7 @@ public class User {
     private String name;
     private String emailid;
     private int totalpt;
+    private int lost;
     private int voucher;
 
     public User() {
@@ -16,6 +17,14 @@ public class User {
         this.emailid = emailid;
         this.totalpt = totalpt;
         this.voucher = voucher;
+    }
+    public User(String uid, String name, String emailid, int totalpt, int voucher,int lost) {
+        this.uid = uid;
+        this.name = name;
+        this.emailid = emailid;
+        this.totalpt = totalpt;
+        this.voucher = voucher;
+        this.lost=lost;
     }
 
     public User( String name, String emailid, int totalpt, int voucher) {
@@ -56,5 +65,13 @@ public class User {
 
     public void setVoucher(int rank) {
         this.voucher = voucher;
+    }
+
+    public int getLost() {
+        return lost;
+    }
+
+    public void setLost(int lost) {
+        this.lost = lost;
     }
 }
